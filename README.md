@@ -3,6 +3,10 @@
 Production-grade hybrid architecture connecting Azure Front Door and App Service to an on-premises SQL Server via Site-to-Site VPN.
 
 ## Architecture
+
+Internet → Azure Front Door (CDN + WAF) → App Service (Node.js) → VPN Tunnel → Windows Server 2025 (SQL Server Express)
+
+
 ## Stack
 
 | Layer | Technology |
@@ -34,11 +38,11 @@ hybrid-azure-onprem/
 2. Update `infra/terraform/terraform.tfvars` with your public IP and DB details
 3. `cd infra/terraform && terraform init && terraform apply`
 4. Copy VPN Gateway public IP from Terraform output
-5. Run `infra/onprem/02-configure-vpn.ps1 -AzureVpnGatewayIp <IP>`
+5. Run `infra/onprem/02-configure-vpn.ps1 -AzureVpnGatewayIp YOUR_IP`
 6. Run `infra/onprem/03-firewall-rules.ps1`
 7. Run `infra/onprem/04-create-db-user.ps1`
-8. Deploy app to App Service: `az webapp deploy`
-9. Test: `curl https://<frontdoor-url>/health`
+8. Deploy app: `az webapp deploy`
+9. Test: `curl https://YOUR_FRONTDOOR_URL/health`
 
 ## Key concepts demonstrated
 
