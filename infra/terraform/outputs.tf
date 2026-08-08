@@ -1,6 +1,6 @@
 output "frontdoor_url" {
   value       = module.frontdoor.endpoint_url
-  description = "Your Front Door URL — test with curl"
+  description = "Your Front Door URL - test with curl"
 }
 
 output "vpn_gateway_public_ip" {

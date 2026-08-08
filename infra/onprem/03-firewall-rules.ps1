@@ -1,4 +1,5 @@
 # Run on Windows Server as Administrator
+# Opens required ports for SQL Server and VPN
 
 $ErrorActionPreference = "Stop"
 
@@ -11,7 +12,7 @@ New-NetFirewallRule `
   -Action Allow `
   -Profile Any
 
-Write-Host "Opening IKE/IPSec ports for VPN..."
+Write-Host "Opening IKE port UDP 500 for VPN..."
 New-NetFirewallRule `
   -DisplayName "IKE UDP 500" `
   -Direction Inbound `
@@ -19,6 +20,7 @@ New-NetFirewallRule `
   -LocalPort 500 `
   -Action Allow
 
+Write-Host "Opening NAT-T port UDP 4500 for VPN..."
 New-NetFirewallRule `
   -DisplayName "IPSec NAT-T UDP 4500" `
   -Direction Inbound `
@@ -26,5 +28,5 @@ New-NetFirewallRule `
   -LocalPort 4500 `
   -Action Allow
 
-Write-Host "All firewall rules added."
-Get-NetFirewallRule | Where-Object DisplayName -like "*SQL*" | Select DisplayName, Enabled, Direction
+Write-Host "All firewall rules added:"
+Get-NetFirewallRule | Where-Object { $_.DisplayName -like "*SQL*" -or $_.DisplayName -like "*IKE*" -or $_.DisplayName -like "*NAT*" } | Select-Object DisplayName, Enabled, Direction

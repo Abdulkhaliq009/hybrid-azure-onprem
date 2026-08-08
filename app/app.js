@@ -17,15 +17,26 @@ const dbConfig = {
   },
 };
 
+// Health check - Front Door probes this every 30s
 app.get("/health", (req, res) => {
-  res.json({ status: "ok", timestamp: new Date().toISOString() });
+  res.json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+    region: process.env.WEBSITE_SITE_NAME || "local",
+  });
 });
 
+// Products - reads from on-prem SQL Server over VPN
 app.get("/products", async (req, res) => {
   try {
     await sql.connect(dbConfig);
-    const result = await sql.query("SELECT * FROM products");
-    res.json({ source: "on-prem SQL Server", data: result.recordset });
+    const result = await sql.query("SELECT * FROM products ORDER BY id");
+    res.json({
+      source: "on-prem SQL Server",
+      host: process.env.DB_HOST,
+      count: result.recordset.length,
+      data: result.recordset,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

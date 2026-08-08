@@ -1,4 +1,5 @@
 # Run this on your Windows Server 2025 as Administrator
+# Downloads and silently installs SQL Server Express 2022
 
 $ErrorActionPreference = "Stop"
 

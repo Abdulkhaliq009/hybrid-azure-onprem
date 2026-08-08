@@ -4,8 +4,9 @@ Production-grade hybrid architecture connecting Azure Front Door and App Service
 
 ## Architecture
 
+```
 Internet → Azure Front Door (CDN + WAF) → App Service (Node.js) → VPN Tunnel → Windows Server 2025 (SQL Server Express)
-
+```
 
 ## Stack
 
@@ -20,17 +21,31 @@ Internet → Azure Front Door (CDN + WAF) → App Service (Node.js) → VPN Tunn
 
 ## Repo structure
 
+```
 hybrid-azure-onprem/
 ├── infra/
-│ ├── terraform/
-│ │ └── modules/
-│ │ ├── frontdoor/
-│ │ ├── vpn/
-│ │ └── appservice/
-│ └── onprem/
+│   ├── terraform/
+│   │   ├── main.tf
+│   │   ├── variables.tf
+│   │   ├── outputs.tf
+│   │   ├── terraform.tfvars
+│   │   └── modules/
+│   │       ├── frontdoor/
+│   │       ├── vpn/
+│   │       └── appservice/
+│   └── onprem/
+│       ├── 01-install-sql.ps1
+│       ├── 02-configure-vpn.ps1
+│       ├── 03-firewall-rules.ps1
+│       └── 04-create-db-user.ps1
 ├── app/
+│   ├── app.js
+│   ├── package.json
+│   └── .env.example
 └── docs/
-
+    ├── architecture.md
+    └── vpn-setup.md
+```
 
 ## Deploy order
 
@@ -49,5 +64,5 @@ hybrid-azure-onprem/
 - Hybrid cloud connectivity via IPSec Site-to-Site VPN
 - Azure Front Door as global entry point with WAF
 - App Service VNet Integration for private backend access
-- On-premises SQL Server as data tier
+- On-premises SQL Server as data tier (simulates enterprise data residency requirement)
 - Infrastructure as Code with Terraform modules
