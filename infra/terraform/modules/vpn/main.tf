@@ -27,6 +27,13 @@ resource "azurerm_subnet" "appservice" {
   }
 }
 
+resource "azurerm_subnet" "private_endpoints" {
+  name                 = "snet-private-endpoints"
+  resource_group_name  = var.resource_group_name
+  virtual_network_name = azurerm_virtual_network.main.name
+  address_prefixes     = ["10.10.3.0/24"]
+}
+
 resource "azurerm_public_ip" "vpn_gateway" {
   name                = "pip-vpn-gateway"
   location            = var.location

@@ -38,3 +38,14 @@ variable "db_password" {
   sensitive   = true
   description = "SQL Server login password"
 }
+
+variable "alert_email" {
+  type        = string
+  description = "Email address for Azure Monitor alerts and Defender for Cloud"
+}
+
+variable "security_contact_phone" {
+  type        = string
+  description = "Phone number for Defender for Cloud security alerts"
+  default     = "+49000000000"
+}

@@ -1,4 +1,16 @@
 require("dotenv").config();
+
+const appInsights = require("applicationinsights");
+if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
+  appInsights.setup(process.env.APPLICATIONINSIGHTS_CONNECTION_STRING)
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .start();
+}
+
 const express = require("express");
 const sql = require("mssql");
 
@@ -17,7 +29,6 @@ const dbConfig = {
   },
 };
 
-// Health check - Front Door probes this every 30s
 app.get("/health", (req, res) => {
   res.json({
     status: "ok",
@@ -26,7 +37,6 @@ app.get("/health", (req, res) => {
   });
 });
 
-// Products - reads from on-prem SQL Server over VPN
 app.get("/products", async (req, res) => {
   try {
     await sql.connect(dbConfig);
@@ -45,4 +55,5 @@ app.get("/products", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`API running on port ${PORT}`);
   console.log(`DB host: ${process.env.DB_HOST}`);
+  console.log(`App Insights: ${process.env.APPLICATIONINSIGHTS_CONNECTION_STRING ? "enabled" : "disabled"}`);
 });
